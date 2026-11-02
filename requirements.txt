@@ -1,0 +1,14 @@
+# Network Topology and Graph Libraries
+networkx>=2.8
+matplotlib>=3.5.0
+pandas>=1.4.0
+numpy>=1.21.0
+
+# Live Web Dashboard & Telemetry
+streamlit>=1.20.0
+plotly>=5.10.0
+
+# SDN Controller Requirements (Ryu)
+ryu>=4.34
+eventlet>=0.30.2
+requests>=2.28.0

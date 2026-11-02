@@ -1,0 +1,23 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Mininet / Wireshark temporary files
+*.pcap
+*.pcapng
+*.log
+*.pid
+
+# Telemetry data logs (generated at runtime)
+analytics/logs/*.csv
+analytics/logs/*.json
+
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# OS generated files
+.DS_Store
+Thumbs.db

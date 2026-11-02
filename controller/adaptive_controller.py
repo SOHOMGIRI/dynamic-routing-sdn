@@ -121,8 +121,10 @@ class AdaptiveRoutingController(app_manager.RyuApp):
                 self.link_capacities[(src, dst)] = cap
                 
                 # Default cost = base delay (5ms)
-                if (src, dst) not in self.link_costs:
-                    self.link_costs[(src, dst)] = 5.0
+                self.link_capacities[(src, dst)] = cap
+                self.link_capacities[(dst, src)] = cap
+                self.link_costs.setdefault((src, dst), 5.0)
+                self.link_costs.setdefault((dst, src), 5.0)
 
                 self.network_graph.add_edge(src, dst, port=src_port, weight=self.link_costs[(src, dst)])
                 self.network_graph.add_edge(dst, src, port=dst_port, weight=self.link_costs[(dst, src)])

@@ -84,7 +84,7 @@ class StaticBaselineController(app_manager.RyuApp):
 
         pkt = packet.Packet(msg.data)
         eth = pkt.get_protocols(ethernet.ethernet)[0]
-        if eth.eth_type == ether_types.ETH_TYPE_LLDP:
+        if eth.ethertype == ether_types.ETH_TYPE_LLDP:
             return
 
         src_mac = eth.src

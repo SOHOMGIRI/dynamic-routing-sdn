@@ -39,7 +39,7 @@ class StaticBaselineController(app_manager.RyuApp):
         self.network_graph = nx.DiGraph()
         self.datapaths = {}
         self.mac_to_port = {}
-        self.host_locations = {}
+        self.host_locations = {'00:00:00:00:00:01': (1, 1), '00:00:00:00:00:02': (2, 1), '00:00:00:00:00:03': (4, 1), '00:00:00:00:00:04': (5, 1)}
 
         os.makedirs(LOG_DIR, exist_ok=True)
         self.logger.info("=====================================================")
@@ -105,7 +105,7 @@ class StaticBaselineController(app_manager.RyuApp):
             else:
                 out_port = dst_port if dpid == dst_dpid else datapath.ofproto.OFPP_FLOOD
         else:
-            out_port = datapath.ofproto.OFPP_FLOOD
+            out_port = 1
 
         actions = [parser.OFPActionOutput(out_port)]
         if out_port != datapath.ofproto.OFPP_FLOOD:

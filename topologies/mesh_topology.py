@@ -86,6 +86,7 @@ def start_network():
     net.addController('c0', controller=RemoteController, ip='127.0.0.1', port=6653)
 
     net.start()
+    net.staticArp()
     info("*** Mesh Network Initialized Successfully.\n")
     info("*** Type 'pingall' to test connectivity or 'exit' to quit.\n")
     CLI(net)

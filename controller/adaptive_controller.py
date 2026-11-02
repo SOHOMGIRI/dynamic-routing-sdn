@@ -240,6 +240,7 @@ class AdaptiveRoutingController(app_manager.RyuApp):
         msg = ev.msg
         datapath = msg.datapath
         dpid = datapath.id
+        ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
         in_port = msg.match['in_port']
 
@@ -247,45 +248,53 @@ class AdaptiveRoutingController(app_manager.RyuApp):
         eth = pkt.get_protocols(ethernet.ethernet)[0]
 
         if eth.ethertype == ether_types.ETH_TYPE_LLDP:
-            return  # Ignore discovery probes
+            return
 
         src_mac = eth.src
         dst_mac = eth.dst
 
-        # Host Tracking (Handles moving nodes)
-        self.mac_to_port[dpid][src_mac] = in_port
-        self.host_locations[src_mac] = (dpid, in_port)
+        # Host Tracking: Only register if packet arrived on an access port (port 1)
+        # Prevents transit packets across trunk links from falsely overwriting host locations!
+        if in_port == 1:
+            self.host_locations[src_mac] = (dpid, in_port)
 
-        # Check if destination host location is known
+        # Route packet if destination host is known
         if dst_mac in self.host_locations:
             dst_dpid, dst_port = self.host_locations[dst_mac]
-            
-            # Compute optimal path using Dijkstra on dynamic weights
-            try:
-                path = nx.shortest_path(self.network_graph, source=dpid, target=dst_dpid, weight='weight')
-            except (nx.NetworkXNoPath, nx.NodeNotFound):
-                path = None
 
-            if path and len(path) > 1:
-                next_hop = path[1]
-                out_port = self.network_graph[dpid][next_hop]['port']
-                self.logger.info("[Route] Flow %s -> %s | Path: %s (Weight: %.1f)", 
-                                 src_mac[-4:], dst_mac[-4:], path, self.network_graph[dpid][next_hop]['weight'])
+            if dpid == dst_dpid:
+                # Arrived at destination switch -> deliver directly to host access port
+                out_port = dst_port
+                actions = [parser.OFPActionOutput(out_port)]
+                match = parser.OFPMatch(eth_dst=dst_mac)
+                self.add_flow(datapath, priority=10, match=match, actions=actions, idle_timeout=20, hard_timeout=60)
             else:
-                out_port = dst_port if dpid == dst_dpid else datapath.ofproto.OFPP_FLOOD
+                # Transiting core mesh -> find path to destination switch
+                try:
+                    path = nx.shortest_path(self.network_graph, source=dpid, target=dst_dpid, weight='weight')
+                except Exception:
+                    path = None
+
+                if path and len(path) > 1:
+                    next_hop = path[1]
+                    out_port = self.network_graph[dpid][next_hop]['port']
+                    self.logger.info("[Route] s%d -> s%d (Flow %s -> %s) | NextHop: s%d via Port %d",
+                                     dpid, dst_dpid, src_mac[-4:], dst_mac[-4:], next_hop, out_port)
+                    actions = [parser.OFPActionOutput(out_port)]
+                    match = parser.OFPMatch(eth_dst=dst_mac)
+                    self.add_flow(datapath, priority=10, match=match, actions=actions, idle_timeout=20, hard_timeout=60)
+                else:
+                    return
         else:
-            out_port = 1
+            return
 
-        actions = [parser.OFPActionOutput(out_port)]
+        # Send packet out with standard OpenFlow 1.3 buffer check
+        data = None
+        if msg.buffer_id == ofproto.OFP_NO_BUFFER:
+            data = msg.data
 
-        # Install flow rule if destination is known unicast
-        if out_port != datapath.ofproto.OFPP_FLOOD:
-            match = parser.OFPMatch(in_port=in_port, eth_dst=dst_mac, eth_src=src_mac)
-            self.add_flow(datapath, priority=10, match=match, actions=actions, idle_timeout=15, hard_timeout=60)
-
-        # Send packet out
         out = parser.OFPPacketOut(datapath=datapath, buffer_id=msg.buffer_id,
-                                  in_port=in_port, actions=actions, data=msg.data)
+                                  in_port=in_port, actions=actions, data=data)
         datapath.send_msg(out)
 
     def _export_live_telemetry(self):

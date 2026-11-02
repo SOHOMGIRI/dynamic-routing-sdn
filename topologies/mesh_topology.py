@@ -17,6 +17,7 @@ from mininet.node import RemoteController, OVSSwitch
 from mininet.link import TCLink
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
+from functools import partial
 import sys
 
 class DynamicMeshTopo(Topo):
@@ -38,12 +39,12 @@ class DynamicMeshTopo(Topo):
     """
     def build(self):
         info("*** Adding 6 Open vSwitches (OpenFlow 1.3)...\n")
-        s1 = self.addSwitch('s1', dpid='0000000000000001', protocols='OpenFlow13')
-        s2 = self.addSwitch('s2', dpid='0000000000000002', protocols='OpenFlow13')
-        s3 = self.addSwitch('s3', dpid='0000000000000003', protocols='OpenFlow13')
-        s4 = self.addSwitch('s4', dpid='0000000000000004', protocols='OpenFlow13')
-        s5 = self.addSwitch('s5', dpid='0000000000000005', protocols='OpenFlow13')
-        s6 = self.addSwitch('s6', dpid='0000000000000006', protocols='OpenFlow13')
+        s1 = self.addSwitch('s1', dpid='0000000000000001')
+        s2 = self.addSwitch('s2', dpid='0000000000000002')
+        s3 = self.addSwitch('s3', dpid='0000000000000003')
+        s4 = self.addSwitch('s4', dpid='0000000000000004')
+        s5 = self.addSwitch('s5', dpid='0000000000000005')
+        s6 = self.addSwitch('s6', dpid='0000000000000006')
 
         info("*** Adding 4 End Hosts...\n")
         h1 = self.addHost('h1', ip='10.0.0.1/24', mac='00:00:00:00:00:01')
@@ -73,9 +74,11 @@ class DynamicMeshTopo(Topo):
 def start_network():
     """Starts the Mininet network and hooks to Ryu controller."""
     topo = DynamicMeshTopo()
+    ovs13 = partial(OVSSwitch, protocols='OpenFlow13')
+
     net = Mininet(
         topo=topo,
-        switch=OVSSwitch,
+        switch=ovs13,
         controller=None,
         link=TCLink,
         autoSetMacs=True,
@@ -83,7 +86,7 @@ def start_network():
     )
 
     info("*** Connecting to Remote Ryu SDN Controller at 127.0.0.1:6653...\n")
-    net.addController('c0', controller=RemoteController, ip='127.0.0.1', port=6653)
+    c0 = net.addController('c0', controller=RemoteController, ip='127.0.0.1', port=6653)
 
     net.start()
     net.staticArp()

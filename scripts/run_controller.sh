@@ -3,4 +3,4 @@
 echo "====================================================="
 echo "   STARTING RYU ADAPTIVE CONTROLLER (Sohom Giri)     "
 echo "====================================================="
-ryu-manager controller/adaptive_controller.py --observe-links
+ryu-manager --ofp-tcp-listen-port 6653 controller/adaptive_controller.py --observe-links

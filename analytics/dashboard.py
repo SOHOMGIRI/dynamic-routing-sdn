@@ -8,7 +8,8 @@ Institution: St. Thomas' College of Engineering & Technology (MAKAUT)
 Supervisor: Dr. Sanghamitra De
 
 Description:
-    Production-grade Network Operations Center (NOC) dashboard providing:
+    High-Contrast Light-Themed Network Operations Center (NOC) dashboard providing:
+    - Crystal-clear visibility with vibrant, high-contrast buttons and readable typography.
     - Real-time OpenFlow 1.3 topology visualization with interactive zoom, pan, and link heatmaps.
     - Zero-lag, fail-safe scenario injection (Elephant flows, Chaos link cuts, and baseline resets).
     - Uses non-blocking @st.fragment for smooth real-time telemetry streaming without event drops.
@@ -26,7 +27,7 @@ import time
 import random
 
 # =====================================================================
-# 1. PAGE CONFIGURATION & ENTERPRISE NOC THEME
+# 1. PAGE CONFIGURATION & HIGH-CONTRAST LIGHT THEME
 # =====================================================================
 st.set_page_config(
     page_title="AR-SDN | Network Operations Center",
@@ -35,192 +36,207 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom High-End Cyber-Slate NOC CSS (Strictly Professional, No Emojis)
+# Custom High-Contrast Light Theme CSS (Ultra-Visible, Bold Buttons, Zero Camouflage)
 st.markdown("""
 <style>
-    /* Dark Slate Background & High-Contrast Typography */
+    /* Clean Light Background & Deep Solid Charcoal Typography */
     .stApp {
-        background-color: #0b0f19;
-        color: #f1f5f9;
+        background-color: #f8fafc;
+        color: #0f172a;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     
-    /* Headers & Subheaders - Ultra Clear & Luminous */
+    /* Headers & Subheaders - Solid Deep Charcoal */
     h1, h2, h3, h4, h5, h6 {
-        color: #ffffff !important;
-        font-weight: 750 !important;
+        color: #0f172a !important;
+        font-weight: 800 !important;
         letter-spacing: -0.01em !important;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
     }
     
     /* Global readable text */
     p, span, label {
-        color: #e2e8f0 !important;
+        color: #1e293b !important;
+        font-size: 0.95rem;
     }
 
-    /* Sidebar Headings & Form Labels */
+    /* Sidebar - Crisp White with Slate Border */
     section[data-testid="stSidebar"] {
-        background-color: #0f172a !important;
-        border-right: 1px solid #1e293b;
+        background-color: #ffffff !important;
+        border-right: 2px solid #e2e8f0;
     }
     section[data-testid="stSidebar"] h1,
     section[data-testid="stSidebar"] h2,
     section[data-testid="stSidebar"] h3,
     section[data-testid="stSidebar"] h4 {
-        color: #ffffff !important;
-        font-weight: 700 !important;
+        color: #0f172a !important;
+        font-weight: 800 !important;
     }
     section[data-testid="stSidebar"] label,
     section[data-testid="stSidebar"] p {
-        color: #e2e8f0 !important;
+        color: #1e293b !important;
+        font-weight: 600 !important;
     }
 
     /* Monospace elements */
     code, pre {
         font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
-        background-color: #1e293b !important;
-        color: #38bdf8 !important;
+        background-color: #f1f5f9 !important;
+        color: #0284c7 !important;
+        border: 1px solid #cbd5e1 !important;
+        font-weight: 600 !important;
     }
 
-    /* Streamlit Tab Buttons - High Contrast */
+    /* Streamlit Tab Buttons - High Contrast Light Cards */
     button[data-baseweb="tab"] {
-        color: #cbd5e1 !important;
-        font-size: 0.92rem !important;
-        font-weight: 600 !important;
-        background-color: #1e293b !important;
-        border: 1px solid #334155 !important;
+        color: #475569 !important;
+        font-size: 0.95rem !important;
+        font-weight: 700 !important;
+        background-color: #e2e8f0 !important;
+        border: 1px solid #cbd5e1 !important;
         border-radius: 6px 6px 0 0 !important;
-        padding: 9px 18px !important;
+        padding: 10px 20px !important;
         margin-right: 6px !important;
+        transition: all 0.2s ease-in-out !important;
     }
     button[data-baseweb="tab"]:hover {
-        color: #ffffff !important;
-        background-color: #334155 !important;
+        color: #0f172a !important;
+        background-color: #cbd5e1 !important;
     }
     button[data-baseweb="tab"][aria-selected="true"] {
-        color: #38bdf8 !important;
-        background-color: #0f172a !important;
-        border-bottom: 3px solid #38bdf8 !important;
-        font-weight: 750 !important;
+        color: #1d4ed8 !important;
+        background-color: #ffffff !important;
+        border-top: 3px solid #2563eb !important;
+        border-bottom: 2px solid #ffffff !important;
+        font-weight: 800 !important;
+        box-shadow: 0 -2px 5px rgba(0,0,0,0.05) !important;
     }
 
     /* Captions and Subtext */
     div[data-testid="stCaptionContainer"] p {
-        color: #94a3b8 !important;
-        font-size: 0.88rem !important;
+        color: #475569 !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
     }
 
-    /* Enterprise Attribution Banner */
+    /* Enterprise Attribution Banner - Light Royal Card */
     .noc-header-card {
-        background: linear-gradient(135deg, #131c2e 0%, #1e293b 100%);
-        border: 1px solid #3b82f6;
-        border-radius: 8px;
-        padding: 18px 24px;
+        background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
+        border: 2px solid #3b82f6;
+        border-radius: 10px;
+        padding: 20px 26px;
         margin-bottom: 22px;
-        box-shadow: 0 4px 12px -1px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 4px 8px -2px rgba(37, 99, 235, 0.12), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
     }
     .team-chip {
         display: inline-block;
-        background-color: #0f172a;
-        border: 1px solid #475569;
-        border-radius: 5px;
-        padding: 5px 12px;
+        background-color: #dbeafe;
+        border: 1px solid #93c5fd;
+        border-radius: 6px;
+        padding: 6px 14px;
         margin: 4px 8px 4px 0;
-        font-size: 0.88rem;
-        color: #f1f5f9;
+        font-size: 0.9rem;
+        color: #1e3a8a;
+        font-weight: 600;
     }
     .team-chip b {
-        color: #38bdf8;
+        color: #1d4ed8;
     }
 
-    /* Status Badges */
+    /* Status Badges - Vivid & Light */
     .badge-nominal {
-        background-color: #064e3b;
-        border: 1px solid #10b981;
-        color: #6ee7b7;
-        padding: 4px 12px;
-        border-radius: 4px;
-        font-size: 0.82rem;
-        font-weight: 700;
+        background-color: #d1fae5;
+        border: 1.5px solid #10b981;
+        color: #065f46;
+        padding: 5px 14px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 800;
         letter-spacing: 0.05em;
         text-transform: uppercase;
         display: inline-block;
     }
     .badge-congested {
-        background-color: #78350f;
-        border: 1px solid #f59e0b;
-        color: #fde68a;
-        padding: 4px 12px;
-        border-radius: 4px;
-        font-size: 0.82rem;
-        font-weight: 700;
+        background-color: #fef3c7;
+        border: 1.5px solid #f59e0b;
+        color: #92400e;
+        padding: 5px 14px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 800;
         letter-spacing: 0.05em;
         text-transform: uppercase;
         display: inline-block;
     }
     .badge-severed {
-        background-color: #881337;
-        border: 1px solid #f43f5e;
-        color: #fecdd3;
-        padding: 4px 12px;
-        border-radius: 4px;
-        font-size: 0.82rem;
-        font-weight: 700;
+        background-color: #ffe4e6;
+        border: 1.5px solid #f43f5e;
+        color: #9f1239;
+        padding: 5px 14px;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 800;
         letter-spacing: 0.05em;
         text-transform: uppercase;
         display: inline-block;
     }
 
-    /* Metric Card Styling */
+    /* Metric Card Styling - Pure White Box */
     div[data-testid="stMetric"] {
-        background-color: #131c2e;
-        border: 1px solid #2d3748;
-        border-radius: 6px;
-        padding: 14px 18px;
-        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
+        background-color: #ffffff;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 16px 20px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     }
     div[data-testid="stMetricLabel"] p {
-        color: #93c5fd !important;
+        color: #475569 !important;
         font-size: 0.85rem !important;
         text-transform: uppercase;
-        font-weight: 700 !important;
-        letter-spacing: 0.05em;
+        font-weight: 800 !important;
+        letter-spacing: 0.04em;
     }
     div[data-testid="stMetricValue"] div {
-        color: #ffffff !important;
-        font-weight: 800 !important;
-        font-size: 1.7rem !important;
+        color: #0f172a !important;
+        font-weight: 900 !important;
+        font-size: 1.8rem !important;
     }
 
-    /* Terminal Log Window */
+    /* Terminal Log Window - Crisp Light Monospace Box */
     .terminal-box {
-        background-color: #030712;
-        border: 1px solid #334155;
-        border-radius: 6px;
-        padding: 14px;
+        background-color: #ffffff;
+        border: 2px solid #cbd5e1;
+        border-radius: 8px;
+        padding: 16px;
         font-family: "JetBrains Mono", Consolas, monospace;
-        font-size: 0.85rem;
-        color: #6ee7b7;
+        font-size: 0.88rem;
+        color: #0f172a;
         line-height: 1.6;
         height: 280px;
         overflow-y: auto;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.03);
     }
 
-    /* Button Styling */
+    /* BUTTON STYLING - BOLD, VIBRANT & HIGH CONTRAST (NO CAMOUFLAGE) */
     div.stButton > button {
-        background-color: #1e293b;
+        background-color: #2563eb !important;
         color: #ffffff !important;
-        border: 1px solid #475569;
-        border-radius: 5px;
-        font-weight: 700;
-        padding: 9px 15px;
-        transition: all 0.2s ease-in-out;
-        width: 100%;
+        border: 2px solid #1d4ed8 !important;
+        border-radius: 6px !important;
+        font-weight: 800 !important;
+        font-size: 0.95rem !important;
+        padding: 10px 16px !important;
+        box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3) !important;
+        transition: all 0.2s ease-in-out !important;
+        width: 100% !important;
     }
     div.stButton > button:hover {
-        background-color: #3b82f6;
-        border-color: #60a5fa;
-        color: #ffffff !important;
+        background-color: #1d4ed8 !important;
+        border-color: #1e40af !important;
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.45) !important;
+        transform: translateY(-2px) !important;
+    }
+    div.stButton > button:active {
+        transform: translateY(0px) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -292,29 +308,29 @@ st.markdown("""
 <div class="noc-header-card">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
         <div>
-            <span style="font-size: 1.45rem; font-weight: 850; color: #ffffff; letter-spacing: -0.01em;">
+            <span style="font-size: 1.55rem; font-weight: 850; color: #1e3a8a; letter-spacing: -0.01em;">
                 AR-SDN: Adaptive Dynamic Routing Optimization
             </span>
-            <span style="font-size: 1.0rem; font-weight: 600; color: #93c5fd; margin-left: 10px;">
+            <span style="font-size: 1.05rem; font-weight: 700; color: #2563eb; margin-left: 10px;">
                 | Enterprise Network Operations Center (NOC)
             </span>
-            <div style="font-size: 0.88rem; color: #cbd5e1; margin-top: 5px;">
+            <div style="font-size: 0.92rem; color: #475569; margin-top: 5px; font-weight: 500;">
                 Final-Year B.Tech Project in Computer Science and Engineering | St. Thomas' College of Engineering & Technology (MAKAUT)
             </div>
         </div>
         <div style="text-align: right; margin-top: 4px;">
             <span class="badge-nominal">Fabric Status: OFP_13 Active</span>
-            <span style="margin-left: 6px; font-size: 0.85rem; color: #e2e8f0; font-family: monospace; font-weight: 600;">PORT: 6653</span>
+            <span style="margin-left: 8px; font-size: 0.9rem; color: #1e3a8a; font-family: monospace; font-weight: 700;">PORT: 6653</span>
         </div>
     </div>
-    <hr style="border: 0; border-top: 1px solid #475569; margin: 12px 0 10px 0;">
+    <hr style="border: 0; border-top: 1.5px solid #bfdbfe; margin: 14px 0 12px 0;">
     <div style="display: flex; flex-wrap: wrap; align-items: center;">
-        <span style="font-size: 0.85rem; font-weight: 700; color: #93c5fd; margin-right: 8px;">RESEARCH TEAM:</span>
+        <span style="font-size: 0.88rem; font-weight: 800; color: #1e3a8a; margin-right: 10px;">RESEARCH TEAM:</span>
         <div class="team-chip"><b>Sohom Giri</b> (Roll: <code>12200123157</code>) — Lead & Adaptive Routing Core</div>
         <div class="team-chip"><b>Bratin Roy</b> (Roll: <code>12200123042</code>) — Mininet Mesh Fabric & Chaos Testing</div>
         <div class="team-chip"><b>Bisal Mondal</b> (Roll: <code>12200123039</code>) — Telemetry Pipeline & Web Dashboard</div>
-        <div style="margin-left: auto; font-size: 0.85rem; color: #e2e8f0;">
-            Supervisor: <b style="color: #ffffff;">Dr. Sanghamitra De</b> (Dept. of CSE)
+        <div style="margin-left: auto; font-size: 0.88rem; color: #334155; font-weight: 600;">
+            Supervisor: <b style="color: #0f172a;">Dr. Sanghamitra De</b> (Dept. of CSE)
         </div>
     </div>
 </div>
@@ -323,8 +339,8 @@ st.markdown("""
 # =====================================================================
 # 4. SIDEBAR: OPERATIONAL CONTROL & SCENARIO DISPATCHER
 # =====================================================================
-st.sidebar.markdown("### Operational Controls")
-st.sidebar.caption("Execute deterministic network scenarios or chaos triggers:")
+st.sidebar.markdown("### 🎛️ Network Controls")
+st.sidebar.markdown("Select a scenario or trigger dynamic network events:")
 
 # Synchronized Scenario Selector (Radio + Buttons both work together seamlessly)
 scenario_options = {
@@ -348,60 +364,58 @@ selected_radio = st.sidebar.radio(
     on_change=on_radio_change
 )
 
-st.sidebar.markdown("#### Quick Action Triggers")
+st.sidebar.markdown("#### Quick Action Buttons")
 
 # Two-column action buttons with explicit callbacks
 col_a, col_b = st.sidebar.columns(2)
 with col_a:
-    st.button("Inject Elephant Flow", on_click=cb_inject_elephant, help="Injects an 18 Mbps burst exceeding the 15 Mbps link capacity.")
+    st.button("⚡ Inject Elephant Flow", on_click=cb_inject_elephant, help="Injects an 18 Mbps burst exceeding the 15 Mbps link capacity.")
 with col_b:
-    st.button("Reset to Normal", on_click=cb_reset_baseline, help="Restores normal mice flow traffic parameters.")
+    st.button("🔄 Reset to Normal", on_click=cb_reset_baseline, help="Restores normal mice flow traffic parameters.")
 
 col_c, col_d = st.sidebar.columns(2)
 with col_c:
-    st.button("Sever Link s1-s2", on_click=cb_sever_link, help="Triggers simulated link cut (OFPPortStatus down).")
+    st.button("✂️ Sever Link s1-s2", on_click=cb_sever_link, help="Triggers simulated link cut (OFPPortStatus down).")
 with col_d:
-    st.button("Restore Link", on_click=cb_restore_link, help="Restores link s1-s2 to operational state.")
+    st.button("🩹 Restore Link", on_click=cb_restore_link, help="Restores link s1-s2 to operational state.")
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("#### Fabric Health & Architecture")
+st.sidebar.markdown("#### Fabric Health Status")
 
 # Dynamic status badge based on active scenario
 if st.session_state.scenario == "severed":
     st.sidebar.markdown('<div class="badge-severed" style="width:100%; text-align:center;">CRITICAL: TRUNK S1-S2 DOWN</div>', unsafe_allow_html=True)
     st.sidebar.markdown("""
-    - **Active Detour**: `s1 -> s4 -> s5 -> s2`
-    - **Reconvergence Latency**: `13.8 ms`
-    - **Packet Drop Rate**: `0.0% (Zero loss)`
-    - **Mechanism**: Fast-Failover `OFPPortStatus`
+    * **Active Detour**: `s1 -> s4 -> s5 -> s2`
+    * **Reconvergence Latency**: `13.8 ms`
+    * **Packet Drop Rate**: `0.0% (Zero loss)`
+    * **Mechanism**: Fast-Failover `OFPPortStatus`
     """)
 elif st.session_state.scenario == "elephant":
     st.sidebar.markdown('<div class="badge-congested" style="width:100%; text-align:center;">ALERT: S1-S2 CONGESTION SPIKE</div>', unsafe_allow_html=True)
     st.sidebar.markdown("""
-    - **Trunk Throughput**: `18.0 Mbps` (Cap: `15 Mbps`)
-    - **Dynamic Weight**: `32.5 ms` (Base: `5.0 ms`)
-    - **Rerouted Path**: `s1 -> s4 -> s5 -> s2`
-    - **Algorithm**: Non-linear exponential penalty ($k=4$)
+    * **Trunk Throughput**: `18.0 Mbps` (Cap: `15 Mbps`)
+    * **Dynamic Weight**: `32.5 ms` (Base: `5.0 ms`)
+    * **Rerouted Path**: `s1 -> s4 -> s5 -> s2`
+    * **Algorithm**: Non-linear exponential penalty ($k=4$)
     """)
 else:
     st.sidebar.markdown('<div class="badge-nominal" style="width:100%; text-align:center;">NOMINAL: ALL LINKS OPERATIONAL</div>', unsafe_allow_html=True)
     st.sidebar.markdown("""
-    - **Primary Path**: `s1 -> s2` (Single-hop trunk)
-    - **Latency**: `5.1 ms` RTT
-    - **Trunk Throughput**: `2.4 Mbps`
-    - **Proxy-ARP**: Active (Broadcast suppression)
+    * **Primary Path**: `s1 -> s2` (Single-hop trunk)
+    * **Latency**: `5.1 ms` RTT
+    * **Trunk Throughput**: `2.4 Mbps`
+    * **Proxy-ARP**: Active (Broadcast suppression)
     """)
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("#### Telemetry Stream Options")
+st.sidebar.markdown("#### Telemetry Settings")
 auto_refresh = st.sidebar.toggle("Auto-Refresh Telemetry Feed", value=True)
 refresh_interval = st.sidebar.select_slider("Refresh Interval (sec)", options=[1, 2, 3, 5], value=2)
 
 # =====================================================================
 # 5. LIVE TELEMETRY FRAGMENT (AUTONOMOUS NON-BLOCKING STREAM)
 # =====================================================================
-# Using Streamlit @st.fragment for smooth background chart updates
-# without blocking button callbacks or causing page freezes!
 @st.fragment(run_every=f"{refresh_interval}s" if auto_refresh else None)
 def render_live_telemetry_and_topology():
     now_str = time.strftime("%H:%M:%S")
@@ -436,13 +450,13 @@ def render_live_telemetry_and_topology():
     st.session_state.history_tput.append(curr_tput)
     st.session_state.history_tput.pop(0)
 
-    # Top KPI Metric Cards
+    # Top KPI Metric Cards (Clean Light Theme)
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
     with kpi1:
         st.metric(
             label="Active Routing Strategy",
             value=strategy_status,
-            delta=f"Active Path: {active_path_str}"
+            delta=f"Path: {active_path_str}"
         )
     with kpi2:
         st.metric(
@@ -455,23 +469,23 @@ def render_live_telemetry_and_topology():
         st.metric(
             label="Packet Loss Ratio",
             value=f"{curr_loss:.1f}%",
-            delta="0.0% (Zero Drops Guaranteed)"
+            delta="0.0% (Zero Drops)"
         )
     with kpi4:
         st.metric(
-            label="Aggregate Fabric Throughput",
+            label="Fabric Throughput",
             value=f"{curr_tput:.2f} Mbps",
-            delta=f"{st.session_state.packet_counter:,} Packets Processed"
+            delta=f"{st.session_state.packet_counter:,} Packets"
         )
 
-    st.markdown("<div style='height: 12px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='height: 14px;'></div>", unsafe_allow_html=True)
 
     # Topology & Live Charts Split
     col_topo, col_tele = st.columns([1.35, 1.0])
 
     with col_topo:
-        st.subheader("OpenFlow Fabric Topology & Link Heatmap")
-        st.caption("Interactive Zoom & Pan Enabled. Double click to reset view.")
+        st.subheader("OpenFlow Fabric Topology & Heatmap")
+        st.caption("Scroll mouse wheel to Zoom in/out. Click and drag to Pan.")
 
         node_coords = {
             "h1": (0.0, 3.0), "s1": (2.0, 3.0), "s2": (8.0, 3.0), "h2": (10.0, 3.0),
@@ -494,35 +508,35 @@ def render_live_telemetry_and_topology():
             # Trunk link s1-s2 evaluation
             if (src, tgt) == ("s1", "s2") or (tgt, src) == ("s1", "s2"):
                 if st.session_state.scenario == "severed":
-                    l_color = "#64748b"
-                    l_width = 2.5
+                    l_color = "#94a3b8"
+                    l_width = 3.0
                     l_dash = "dash"
-                    l_text = "Link s1 <-> s2 [STATUS: SEVERED (DOWN)] | Cost: INF"
+                    l_text = "Link s1 <-> s2 [SEVERED / DOWN] | Cost: INF"
                 elif st.session_state.scenario == "elephant":
-                    l_color = "#ef4444"
-                    l_width = 7.0
+                    l_color = "#dc2626"
+                    l_width = 7.5
                     l_dash = "solid"
-                    l_text = "Link s1 <-> s2 [STATUS: CONGESTED] | Load: 18.0 Mbps / 15 Mbps (120%) | Cost: 32.5 ms"
+                    l_text = "Link s1 <-> s2 [CONGESTED: 18 Mbps / 120%] | Cost: 32.5 ms"
                 else:
-                    l_color = "#10b981"
-                    l_width = 3.5
+                    l_color = "#16a34a"
+                    l_width = 4.0
                     l_dash = "solid"
-                    l_text = "Link s1 <-> s2 [STATUS: OPTIMAL] | Load: 2.4 Mbps / 15 Mbps (16%) | Cost: 5.0 ms"
+                    l_text = "Link s1 <-> s2 [OPTIMAL: 2.4 Mbps / 16%] | Cost: 5.0 ms"
             elif st.session_state.scenario in ("severed", "elephant"):
                 # Active detour path: s1 -> s4 -> s5 -> s2
                 if (src, tgt) in [("s1", "s4"), ("s4", "s5"), ("s2", "s5")] or (tgt, src) in [("s1", "s4"), ("s4", "s5"), ("s2", "s5")]:
-                    l_color = "#06b6d4"
-                    l_width = 5.5
+                    l_color = "#0284c7"
+                    l_width = 6.0
                     l_dash = "solid"
                     l_text = f"Link {src} <-> {tgt} [ACTIVE DETOUR] | Capacity: 20 Mbps | Cost: 5.0 ms"
                 else:
-                    l_color = "#334155"
-                    l_width = 2.0
+                    l_color = "#cbd5e1"
+                    l_width = 2.5
                     l_dash = "solid"
                     l_text = f"Link {src} <-> {tgt} [STANDBY] | Cost: 5.0 ms"
             else:
-                l_color = "#10b981"
-                l_width = 2.5
+                l_color = "#16a34a"
+                l_width = 3.0
                 l_dash = "solid"
                 l_text = f"Link {src} <-> {tgt} [NOMINAL] | Capacity: 20 Mbps | Cost: 5.0 ms"
 
@@ -535,7 +549,7 @@ def render_live_telemetry_and_topology():
                 showlegend=False
             ))
 
-        # Host Access Links (Dotted Grey)
+        # Host Access Links (Dotted Slate)
         access_links = [("h1", "s1"), ("h2", "s2"), ("h3", "s4"), ("h4", "s5")]
         for h, s in access_links:
             x0, y0 = node_coords[h]
@@ -543,12 +557,12 @@ def render_live_telemetry_and_topology():
             fig_topo.add_trace(go.Scatter(
                 x=[x0, x1], y=[y0, y1],
                 mode="lines",
-                line=dict(width=1.5, color="#475569", dash="dot"),
+                line=dict(width=2.0, color="#64748b", dash="dot"),
                 hoverinfo="none",
                 showlegend=False
             ))
 
-        # Draw Node Glyphs
+        # Draw Node Glyphs with Light Theme Background
         for node, (x, y) in node_coords.items():
             is_switch = node.startswith("s")
             fig_topo.add_trace(go.Scatter(
@@ -556,21 +570,21 @@ def render_live_telemetry_and_topology():
                 mode="markers+text",
                 text=[node.upper()],
                 textposition="top center",
-                textfont=dict(color="#f8fafc", size=13, family="monospace"),
+                textfont=dict(color="#0f172a", size=14, family="monospace"),
                 marker=dict(
-                    size=30 if is_switch else 20,
-                    color="#1e3a8a" if is_switch else "#047857",
+                    size=32 if is_switch else 22,
+                    color="#2563eb" if is_switch else "#16a34a",
                     symbol="square" if is_switch else "circle",
-                    line=dict(width=2, color="#38bdf8" if is_switch else "#34d399")
+                    line=dict(width=2.5, color="#ffffff")
                 ),
                 hoverinfo="text",
-                hovertext=f"Node: {node.upper()} ({'OpenFlow 1.3 Datapath' if is_switch else 'End-Host IP: 10.0.0.' + node[1]})",
+                hovertext=f"Node: {node.upper()} ({'OpenFlow 1.3 Switch' if is_switch else 'End-Host IP: 10.0.0.' + node[1]})",
                 showlegend=False
             ))
 
         fig_topo.update_layout(
-            plot_bgcolor="#090d16",
-            paper_bgcolor="#090d16",
+            plot_bgcolor="#ffffff",
+            paper_bgcolor="#ffffff",
             margin=dict(l=10, r=10, t=10, b=10),
             xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
             yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
@@ -585,53 +599,53 @@ def render_live_telemetry_and_topology():
             'modeBarButtonsToAdd': ['zoom2d', 'pan2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d']
         }
         st.plotly_chart(fig_topo, config=plotly_config, use_container_width=True)
-        st.caption("🟢 Green: Optimal | 🔵 Cyan: Active Detour | 🔴 Red: Congested | ⚪ Dashed: Severed")
+        st.caption("🟢 Green: Optimal Trunk | 🔵 Cyan: Active Detour | 🔴 Red: Congested | ⚪ Dashed: Severed Link")
 
     with col_tele:
         st.subheader("Real-Time Telemetry Feeds")
 
-        # RTT Latency Chart
+        # RTT Latency Chart (Light Theme)
         fig_lat = go.Figure()
         fig_lat.add_trace(go.Scatter(
             x=st.session_state.history_times,
             y=st.session_state.history_lat,
             mode="lines+markers",
-            line=dict(color="#38bdf8" if curr_lat < 12 else "#ef4444", width=2.5),
+            line=dict(color="#2563eb" if curr_lat < 12 else "#dc2626", width=2.5),
             marker=dict(size=4),
             name="RTT Latency"
         ))
-        fig_lat.add_hline(y=15.0, line_dash="dash", line_color="#f59e0b", annotation_text="SLA (15 ms)")
+        fig_lat.add_hline(y=15.0, line_dash="dash", line_color="#d97706", annotation_text="SLA (15 ms)")
         fig_lat.update_layout(
             title="End-to-End Latency (ms)",
             height=175,
             margin=dict(l=10, r=10, t=25, b=10),
-            plot_bgcolor="#090d16", paper_bgcolor="#090d16",
-            font=dict(color="#cbd5e1"),
-            yaxis=dict(range=[2, 25], gridcolor="#1e293b"),
-            xaxis=dict(gridcolor="#1e293b")
+            plot_bgcolor="#ffffff", paper_bgcolor="#ffffff",
+            font=dict(color="#0f172a"),
+            yaxis=dict(range=[2, 25], gridcolor="#e2e8f0"),
+            xaxis=dict(gridcolor="#e2e8f0")
         )
         st.plotly_chart(fig_lat, config={'displayModeBar': False}, use_container_width=True)
 
-        # Throughput Chart
+        # Throughput Chart (Light Theme)
         fig_tput = go.Figure()
         fig_tput.add_trace(go.Scatter(
             x=st.session_state.history_times,
             y=st.session_state.history_tput,
             mode="lines+markers",
             fill="tozeroy",
-            line=dict(color="#10b981", width=2.2),
+            line=dict(color="#16a34a", width=2.2),
             marker=dict(size=4),
             name="Throughput"
         ))
-        fig_tput.add_hline(y=15.0, line_dash="dash", line_color="#ef4444", annotation_text="Trunk Cap (15 Mbps)")
+        fig_tput.add_hline(y=15.0, line_dash="dash", line_color="#dc2626", annotation_text="Trunk Cap (15 Mbps)")
         fig_tput.update_layout(
             title="Fabric Throughput (Mbps)",
             height=175,
             margin=dict(l=10, r=10, t=25, b=10),
-            plot_bgcolor="#090d16", paper_bgcolor="#090d16",
-            font=dict(color="#cbd5e1"),
-            yaxis=dict(range=[0, 24], gridcolor="#1e293b"),
-            xaxis=dict(gridcolor="#1e293b")
+            plot_bgcolor="#ffffff", paper_bgcolor="#ffffff",
+            font=dict(color="#0f172a"),
+            yaxis=dict(range=[0, 24], gridcolor="#e2e8f0"),
+            xaxis=dict(gridcolor="#e2e8f0")
         )
         st.plotly_chart(fig_tput, config={'displayModeBar': False}, use_container_width=True)
 
@@ -641,7 +655,7 @@ render_live_telemetry_and_topology()
 st.markdown("<div style='height: 16px;'></div>", unsafe_allow_html=True)
 
 # =====================================================================
-# 6. TABBED ENTERPRISE NOC ARCHITECTURE (STABLE, PERSISTENT TABS)
+# 6. TABBED ENTERPRISE NOC ARCHITECTURE (LIGHT THEME)
 # =====================================================================
 tab_flowtable, tab_matrix, tab_benchmark, tab_logs = st.tabs([
     "OpenFlow 1.3 Flow-Table Inspector",
@@ -753,16 +767,18 @@ with tab_benchmark:
 
     with col_bench2:
         fig_bar = go.Figure(data=[
-            go.Bar(name='Classical OSPF', x=['Failover Delay (ms)', 'Packet Loss (%)'], y=[2500, 14.8], marker_color='#ef4444'),
-            go.Bar(name='AR-SDN Engine', x=['Failover Delay (ms)', 'Packet Loss (%)'], y=[13.8, 0.0], marker_color='#10b981')
+            go.Bar(name='Classical OSPF', x=['Failover Delay (ms)', 'Packet Loss (%)'], y=[2500, 14.8], marker_color='#dc2626'),
+            go.Bar(name='AR-SDN Engine', x=['Failover Delay (ms)', 'Packet Loss (%)'], y=[13.8, 0.0], marker_color='#16a34a')
         ])
         fig_bar.update_layout(
             barmode='group',
             title="Performance Under Stress & Chaos",
             height=260,
             margin=dict(l=10, r=10, t=35, b=10),
-            plot_bgcolor="#090d16", paper_bgcolor="#090d16",
-            font=dict(color="#cbd5e1")
+            plot_bgcolor="#ffffff", paper_bgcolor="#ffffff",
+            font=dict(color="#0f172a"),
+            yaxis=dict(gridcolor="#e2e8f0"),
+            xaxis=dict(gridcolor="#e2e8f0")
         )
         st.plotly_chart(fig_bar, config={'displayModeBar': False}, use_container_width=True)
 
@@ -797,4 +813,4 @@ with tab_logs:
         ])
 
     log_box_content = "\n".join(log_lines)
-    st.markdown(f'<div class="terminal-box"><pre style="margin:0; background:none; color:inherit;">{log_box_content}</pre></div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="terminal-box"><pre style="margin:0; background:none; color:#0f172a; font-weight:600;">{log_box_content}</pre></div>', unsafe_allow_html=True)

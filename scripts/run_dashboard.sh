@@ -1,6 +1,6 @@
 #!/bin/bash
-# Script to launch Bratin Roy's Streamlit Dashboard
+# Script to launch Bisal Mondal's Streamlit Dashboard
 echo "====================================================="
-echo "   STARTING STREAMLIT DASHBOARD (Bratin Roy)         "
+echo "   STARTING STREAMLIT NOC DASHBOARD (Bisal Mondal)   "
 echo "====================================================="
 streamlit run analytics/dashboard.py

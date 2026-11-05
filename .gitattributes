@@ -1,0 +1,5 @@
+# Enforce Unix LF line endings for shell scripts and Python
+*.sh text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf

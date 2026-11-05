@@ -19,6 +19,7 @@ from mininet.cli import CLI
 from mininet.log import setLogLevel, info
 from functools import partial
 import sys
+import time
 
 class DynamicMeshTopo(Topo):
     """
@@ -90,6 +91,8 @@ def start_network():
 
     net.start()
     net.staticArp()
+    info("*** Waiting 2s for Ryu LLDP discovery to map redundant mesh links...\n")
+    time.sleep(2)
     info("*** Mesh Network Initialized Successfully.\n")
     info("*** Type 'pingall' to test connectivity or 'exit' to quit.\n")
     CLI(net)

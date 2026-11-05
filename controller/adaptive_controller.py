@@ -113,25 +113,30 @@ class AdaptiveRoutingController(app_manager.RyuApp):
     # -------------------------------------------------------------
     # 1. TOPOLOGY DISCOVERY & GRAPH MAINTENANCE
     # -------------------------------------------------------------
+    def _update_topology_links(self):
+        switch_list = get_switch(self.topology_api_app, None)
+        switches = [s.dp.id for s in switch_list]
+        self.network_graph.add_nodes_from(switches)
+
+        links = get_link(self.topology_api_app, None)
+        for l in links:
+            src, dst = l.src.dpid, l.dst.dpid
+            src_port, dst_port = l.src.port_no, l.dst.port_no
+            cap = 15_000_000 if (src in (1, 2) and dst in (1, 2)) else 25_000_000
+            self.link_capacities[(src, dst)] = cap
+            self.link_capacities[(dst, src)] = cap
+            self.link_costs.setdefault((src, dst), 5.0)
+            self.link_costs.setdefault((dst, src), 5.0)
+
+            self.network_graph.add_edge(src, dst, port=src_port, weight=self.link_costs[(src, dst)])
+            self.network_graph.add_edge(dst, src, port=dst_port, weight=self.link_costs[(dst, src)])
+
     def _topology_discovery_loop(self):
         while True:
-            switch_list = get_switch(self.topology_api_app, None)
-            switches = [s.dp.id for s in switch_list]
-            self.network_graph.add_nodes_from(switches)
-
-            links = get_link(self.topology_api_app, None)
-            for l in links:
-                src, dst = l.src.dpid, l.dst.dpid
-                src_port, dst_port = l.src.port_no, l.dst.port_no
-                cap = 15_000_000 if (src in (1, 2) and dst in (1, 2)) else 25_000_000
-                self.link_capacities[(src, dst)] = cap
-                self.link_capacities[(dst, src)] = cap
-                self.link_costs.setdefault((src, dst), 5.0)
-                self.link_costs.setdefault((dst, src), 5.0)
-
-                self.network_graph.add_edge(src, dst, port=src_port, weight=self.link_costs[(src, dst)])
-                self.network_graph.add_edge(dst, src, port=dst_port, weight=self.link_costs[(dst, src)])
-
+            try:
+                self._update_topology_links()
+            except Exception:
+                pass
             hub.sleep(2)
 
     # -------------------------------------------------------------
@@ -208,27 +213,40 @@ class AdaptiveRoutingController(app_manager.RyuApp):
         dpid = msg.datapath.id
         ofproto = msg.datapath.ofproto
 
+        # Ignore host access ports (Port 1 on access switches s1, s2, s4, s5)
+        # Host access ports do not affect inter-switch mesh routing
+        if port_no == 1 and dpid in (1, 2, 4, 5):
+            return
+
         if reason in (ofproto.OFPPR_DELETE, ofproto.OFPPR_MODIFY):
-            link_down = (msg.desc.state & ofproto.OFPPS_LINK_DOWN) or (msg.desc.config & ofproto.OFPPC_PORT_DOWN)
+            link_down = bool((msg.desc.state & ofproto.OFPPS_LINK_DOWN) or (msg.desc.config & ofproto.OFPPC_PORT_DOWN))
             if link_down:
-                self.logger.warning("[!] LINK SEVERANCE DETECTED on Switch s%d Port %d", dpid, port_no)
+                self.logger.warning("[!] INTER-SWITCH LINK SEVERED: Switch s%d Port %d", dpid, port_no)
                 edges_to_remove = [(u, v) for u, v, d in self.network_graph.edges(data=True) if u == dpid and d.get('port') == port_no]
                 for u, v in edges_to_remove:
                     if self.network_graph.has_edge(u, v):
                         self.network_graph.remove_edge(u, v)
-                        self.logger.info("[-] Edge removed: s%d -> s%d", u, v)
+                        self.logger.info("[-] Pruned topology edge: s%d -> s%d", u, v)
 
-                # Flush stale flows
+                # Flush stale flows and immediately re-install Table-Miss rule
                 self._flush_switch_flows(msg.datapath)
                 self.logger.info("[✓] Fast-failover completed in < 15ms.")
+            else:
+                self.logger.info("[+] Inter-switch port s%d Port %d came back UP. Restoring link.", dpid, port_no)
+                self._update_topology_links()
 
     def _flush_switch_flows(self, datapath):
+        ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
         match = parser.OFPMatch()
-        mod = parser.OFPFlowMod(datapath=datapath, command=datapath.ofproto.OFPFC_DELETE,
-                                out_port=datapath.ofproto.OFPP_ANY, out_group=datapath.ofproto.OFPG_ANY,
+        mod = parser.OFPFlowMod(datapath=datapath, command=ofproto.OFPFC_DELETE,
+                                out_port=ofproto.OFPP_ANY, out_group=ofproto.OFPG_ANY,
                                 match=match)
         datapath.send_msg(mod)
+
+        # Critical: Re-install Table-Miss flow (Priority 0) so the switch keeps forwarding PacketIn
+        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER, ofproto.OFPCML_NO_BUFFER)]
+        self.add_flow(datapath, priority=0, match=match, actions=actions)
 
     # -------------------------------------------------------------
     # 4. PACKET-IN: CONTROLLER PROXY-ARP & ADAPTIVE ROUTING

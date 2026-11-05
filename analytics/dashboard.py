@@ -38,20 +38,43 @@ st.set_page_config(
 # Custom High-End Cyber-Slate NOC CSS (Strictly Professional, No Emojis)
 st.markdown("""
 <style>
-    /* Dark Slate Background & Typography */
+    /* Dark Slate Background & High-Contrast Typography */
     .stApp {
         background-color: #0b0f19;
-        color: #e2e8f0;
+        color: #f1f5f9;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
     
-    /* Headers & Subheaders */
-    h1, h2, h3, h4 {
-        color: #f8fafc !important;
-        font-weight: 700 !important;
-        letter-spacing: -0.02em;
+    /* Headers & Subheaders - Ultra Clear & Luminous */
+    h1, h2, h3, h4, h5, h6 {
+        color: #ffffff !important;
+        font-weight: 750 !important;
+        letter-spacing: -0.01em !important;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
     }
     
+    /* Global readable text */
+    p, span, label {
+        color: #e2e8f0 !important;
+    }
+
+    /* Sidebar Headings & Form Labels */
+    section[data-testid="stSidebar"] {
+        background-color: #0f172a !important;
+        border-right: 1px solid #1e293b;
+    }
+    section[data-testid="stSidebar"] h1,
+    section[data-testid="stSidebar"] h2,
+    section[data-testid="stSidebar"] h3,
+    section[data-testid="stSidebar"] h4 {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+    }
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] p {
+        color: #e2e8f0 !important;
+    }
+
     /* Monospace elements */
     code, pre {
         font-family: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace !important;
@@ -59,24 +82,52 @@ st.markdown("""
         color: #38bdf8 !important;
     }
 
+    /* Streamlit Tab Buttons - High Contrast */
+    button[data-baseweb="tab"] {
+        color: #cbd5e1 !important;
+        font-size: 0.92rem !important;
+        font-weight: 600 !important;
+        background-color: #1e293b !important;
+        border: 1px solid #334155 !important;
+        border-radius: 6px 6px 0 0 !important;
+        padding: 9px 18px !important;
+        margin-right: 6px !important;
+    }
+    button[data-baseweb="tab"]:hover {
+        color: #ffffff !important;
+        background-color: #334155 !important;
+    }
+    button[data-baseweb="tab"][aria-selected="true"] {
+        color: #38bdf8 !important;
+        background-color: #0f172a !important;
+        border-bottom: 3px solid #38bdf8 !important;
+        font-weight: 750 !important;
+    }
+
+    /* Captions and Subtext */
+    div[data-testid="stCaptionContainer"] p {
+        color: #94a3b8 !important;
+        font-size: 0.88rem !important;
+    }
+
     /* Enterprise Attribution Banner */
     .noc-header-card {
-        background: linear-gradient(135deg, #111827 0%, #1e293b 100%);
-        border: 1px solid #334155;
+        background: linear-gradient(135deg, #131c2e 0%, #1e293b 100%);
+        border: 1px solid #3b82f6;
         border-radius: 8px;
-        padding: 16px 22px;
-        margin-bottom: 20px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+        padding: 18px 24px;
+        margin-bottom: 22px;
+        box-shadow: 0 4px 12px -1px rgba(0, 0, 0, 0.5);
     }
     .team-chip {
         display: inline-block;
-        background-color: #1e293b;
+        background-color: #0f172a;
         border: 1px solid #475569;
-        border-radius: 4px;
-        padding: 4px 10px;
-        margin: 4px 6px 4px 0;
-        font-size: 0.85rem;
-        color: #cbd5e1;
+        border-radius: 5px;
+        padding: 5px 12px;
+        margin: 4px 8px 4px 0;
+        font-size: 0.88rem;
+        color: #f1f5f9;
     }
     .team-chip b {
         color: #38bdf8;
@@ -85,36 +136,36 @@ st.markdown("""
     /* Status Badges */
     .badge-nominal {
         background-color: #064e3b;
-        border: 1px solid #059669;
-        color: #34d399;
-        padding: 3px 10px;
+        border: 1px solid #10b981;
+        color: #6ee7b7;
+        padding: 4px 12px;
         border-radius: 4px;
-        font-size: 0.8rem;
-        font-weight: 600;
+        font-size: 0.82rem;
+        font-weight: 700;
         letter-spacing: 0.05em;
         text-transform: uppercase;
         display: inline-block;
     }
     .badge-congested {
         background-color: #78350f;
-        border: 1px solid #d97706;
-        color: #fbbf24;
-        padding: 3px 10px;
+        border: 1px solid #f59e0b;
+        color: #fde68a;
+        padding: 4px 12px;
         border-radius: 4px;
-        font-size: 0.8rem;
-        font-weight: 600;
+        font-size: 0.82rem;
+        font-weight: 700;
         letter-spacing: 0.05em;
         text-transform: uppercase;
         display: inline-block;
     }
     .badge-severed {
         background-color: #881337;
-        border: 1px solid #e11d48;
-        color: #fda4af;
-        padding: 3px 10px;
+        border: 1px solid #f43f5e;
+        color: #fecdd3;
+        padding: 4px 12px;
         border-radius: 4px;
-        font-size: 0.8rem;
-        font-weight: 600;
+        font-size: 0.82rem;
+        font-weight: 700;
         letter-spacing: 0.05em;
         text-transform: uppercase;
         display: inline-block;
@@ -122,35 +173,35 @@ st.markdown("""
 
     /* Metric Card Styling */
     div[data-testid="stMetric"] {
-        background-color: #111827;
-        border: 1px solid #1f2937;
+        background-color: #131c2e;
+        border: 1px solid #2d3748;
         border-radius: 6px;
-        padding: 12px 16px;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3);
+        padding: 14px 18px;
+        box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.4);
     }
-    div[data-testid="stMetricLabel"] {
-        color: #94a3b8 !important;
-        font-size: 0.8rem !important;
+    div[data-testid="stMetricLabel"] p {
+        color: #93c5fd !important;
+        font-size: 0.85rem !important;
         text-transform: uppercase;
-        font-weight: 600;
+        font-weight: 700 !important;
         letter-spacing: 0.05em;
     }
-    div[data-testid="stMetricValue"] {
-        color: #f1f5f9 !important;
-        font-weight: 700 !important;
-        font-size: 1.6rem !important;
+    div[data-testid="stMetricValue"] div {
+        color: #ffffff !important;
+        font-weight: 800 !important;
+        font-size: 1.7rem !important;
     }
 
     /* Terminal Log Window */
     .terminal-box {
         background-color: #030712;
-        border: 1px solid #1f2937;
+        border: 1px solid #334155;
         border-radius: 6px;
         padding: 14px;
         font-family: "JetBrains Mono", Consolas, monospace;
-        font-size: 0.82rem;
-        color: #a7f3d0;
-        line-height: 1.5;
+        font-size: 0.85rem;
+        color: #6ee7b7;
+        line-height: 1.6;
         height: 280px;
         overflow-y: auto;
     }
@@ -158,18 +209,18 @@ st.markdown("""
     /* Button Styling */
     div.stButton > button {
         background-color: #1e293b;
-        color: #f1f5f9;
+        color: #ffffff !important;
         border: 1px solid #475569;
-        border-radius: 4px;
-        font-weight: 600;
-        padding: 8px 14px;
+        border-radius: 5px;
+        font-weight: 700;
+        padding: 9px 15px;
         transition: all 0.2s ease-in-out;
         width: 100%;
     }
     div.stButton > button:hover {
-        background-color: #334155;
-        border-color: #38bdf8;
-        color: #38bdf8;
+        background-color: #3b82f6;
+        border-color: #60a5fa;
+        color: #ffffff !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -241,29 +292,29 @@ st.markdown("""
 <div class="noc-header-card">
     <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap;">
         <div>
-            <span style="font-size: 1.35rem; font-weight: 800; color: #f8fafc; letter-spacing: -0.01em;">
+            <span style="font-size: 1.45rem; font-weight: 850; color: #ffffff; letter-spacing: -0.01em;">
                 AR-SDN: Adaptive Dynamic Routing Optimization
             </span>
-            <span style="font-size: 0.95rem; color: #94a3b8; margin-left: 10px;">
+            <span style="font-size: 1.0rem; font-weight: 600; color: #93c5fd; margin-left: 10px;">
                 | Enterprise Network Operations Center (NOC)
             </span>
-            <div style="font-size: 0.85rem; color: #64748b; margin-top: 4px;">
+            <div style="font-size: 0.88rem; color: #cbd5e1; margin-top: 5px;">
                 Final-Year B.Tech Project in Computer Science and Engineering | St. Thomas' College of Engineering & Technology (MAKAUT)
             </div>
         </div>
         <div style="text-align: right; margin-top: 4px;">
             <span class="badge-nominal">Fabric Status: OFP_13 Active</span>
-            <span style="margin-left: 6px; font-size: 0.8rem; color: #94a3b8; font-family: monospace;">PORT: 6653</span>
+            <span style="margin-left: 6px; font-size: 0.85rem; color: #e2e8f0; font-family: monospace; font-weight: 600;">PORT: 6653</span>
         </div>
     </div>
-    <hr style="border: 0; border-top: 1px solid #334155; margin: 12px 0 10px 0;">
+    <hr style="border: 0; border-top: 1px solid #475569; margin: 12px 0 10px 0;">
     <div style="display: flex; flex-wrap: wrap; align-items: center;">
-        <span style="font-size: 0.82rem; font-weight: 600; color: #94a3b8; margin-right: 8px;">RESEARCH TEAM:</span>
+        <span style="font-size: 0.85rem; font-weight: 700; color: #93c5fd; margin-right: 8px;">RESEARCH TEAM:</span>
         <div class="team-chip"><b>Sohom Giri</b> (Roll: <code>12200123157</code>) — Lead & Adaptive Routing Core</div>
         <div class="team-chip"><b>Bratin Roy</b> (Roll: <code>12200123042</code>) — Mininet Mesh Fabric & Chaos Testing</div>
         <div class="team-chip"><b>Bisal Mondal</b> (Roll: <code>12200123039</code>) — Telemetry Pipeline & Web Dashboard</div>
-        <div style="margin-left: auto; font-size: 0.82rem; color: #94a3b8;">
-            Supervisor: <b>Dr. Sanghamitra De</b> (Dept. of CSE)
+        <div style="margin-left: auto; font-size: 0.85rem; color: #e2e8f0;">
+            Supervisor: <b style="color: #ffffff;">Dr. Sanghamitra De</b> (Dept. of CSE)
         </div>
     </div>
 </div>
